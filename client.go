@@ -43,7 +43,7 @@ func main() {
 	for {
 		ipAddr, err := discoverIpAddr()
 		if err != nil {
-			fmt.Printf("Error retriving tun0 ip addr. %s\n", err)
+			fmt.Printf("Error retrieving tun0 ip addr. %s\n", err)
 			time.Sleep(30 * time.Second)
 			continue
 		}
