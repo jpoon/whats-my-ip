@@ -6,12 +6,11 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"time"
 
 	"github.com/gorilla/mux"
 )
 
-var ipAddr = ""
+var ipAddr = "192.168.1.50"
 var confTemplate = `
 events {}
 
@@ -30,15 +29,15 @@ func getIpAddr(w http.ResponseWriter, r *http.Request) {
 func updateIpAddr(w http.ResponseWriter, r *http.Request) {
 	ipAddr = mux.Vars(r)["ipAddr"]
 
-	fmt.Printf("%s: %s", time.Now().String(), ipAddr)
+	fmt.Printf("Client address = %s\n", ipAddr)
 	err := writeToFile("nginx.conf", ipAddr)
 	if err != nil {
-		fmt.Fprintf(w, "Error: %s\n", err)
+		fmt.Printf("Error: %s\n", err)
 	}
 
 	err = restartNginx()
 	if err != nil {
-		fmt.Fprintf(w, "Error: %s\n", err)
+		fmt.Printf("Error: %s\n", err)
 	}
 
 	fmt.Fprintf(w, "%s\n", ipAddr)
@@ -60,7 +59,7 @@ func writeToFile(filename string, ipAddr string) error {
 }
 
 func restartNginx() error {
-	cmd := exec.Command("docker-compose", "restart")
+	cmd := exec.Command("docker", "restart", "nginx")
 	_, err := cmd.Output()
 	return err
 }
@@ -71,5 +70,6 @@ func main() {
 	r.HandleFunc("/", getIpAddr).Methods("Get")
 	r.HandleFunc("/{ipAddr}", updateIpAddr).Methods("POST")
 
-	http.ListenAndServe(":8080", r)
+	fmt.Printf("Listening on :8080\n")
+	fmt.Print(http.ListenAndServe(":8080", r))
 }
