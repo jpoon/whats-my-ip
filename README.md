@@ -7,11 +7,12 @@ As a means of discovering what the current IP address is, it periodically sends 
 
 On the server:
 ```
+$ cd server
 $ docker-compose start
-$ go run server.go
 ```
 
 On the client:
 ```
+# configure client.go to talk to above server
 $ go run client.go
 ```
