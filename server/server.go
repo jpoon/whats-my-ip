@@ -8,6 +8,7 @@ import (
 	"os/exec"
 
 	"github.com/gorilla/mux"
+	"github.com/unrolled/secure"
 )
 
 var ipAddr = "192.168.1.50"
@@ -65,8 +66,16 @@ func restartNginx() error {
 }
 
 func main() {
+	secureMiddleware := secure.New(secure.Options{
+        FrameDeny: true,
+		ContentTypeNosniff:    true,
+		BrowserXssFilter:      true,
+    })
+
 	r := mux.NewRouter()
 
+
+	r.Use(secureMiddleware.Handler)
 	r.HandleFunc("/", getIpAddr).Methods("Get")
 	r.HandleFunc("/{ipAddr}", updateIpAddr).Methods("POST")
 
