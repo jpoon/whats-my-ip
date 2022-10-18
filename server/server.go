@@ -67,13 +67,16 @@ func restartNginx() error {
 
 func main() {
 	secureMiddleware := secure.New(secure.Options{
-        FrameDeny: true,
+        STSSeconds:            31536000,
+        STSIncludeSubdomains:  true,
+        STSPreload:            true,
+        ForceSTSHeader:        true,
+        FrameDeny:             true,
 		ContentTypeNosniff:    true,
 		BrowserXssFilter:      true,
     })
 
 	r := mux.NewRouter()
-
 
 	r.Use(secureMiddleware.Handler)
 	r.HandleFunc("/", getIpAddr).Methods("Get")

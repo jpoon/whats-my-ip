@@ -3,6 +3,7 @@ services:
   nginx: 
     image: nginx:latest
     container_name: nginx
+    restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
@@ -12,6 +13,7 @@ services:
   whats-my-ip: 
     image: golang:latest
     container_name: whats-my-ip-server
+    restart: always
     volumes:
       - ./:/usr/go/whats-my-ip/server
       - /var/run/docker.sock:/var/run/docker.sock
